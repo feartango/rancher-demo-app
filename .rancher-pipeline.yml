@@ -1,0 +1,35 @@
+stages:
+- name: Compile
+  steps:
+  - runScriptConfig:
+      image: 192.168.11.150:8081/library/maven:demo
+      shellScript: mvn clean install
+- name: Publish
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./Dockerfile
+      buildContext: .
+      tag: 192.168.11.150:8081/library/demo:${CICD_EXECUTION_SEQUENCE}
+      pushRemote: true
+      registry: 192.168.11.150:8081
+    env:
+      DOCKER_HOST: tcp://dind.default:2375
+      PLUGIN_BUILD_ARGS: VER=${CICD_EXECUTION_SEQUENCE}
+      PLUGIN_DAEMON_OFF: "true"
+      PLUGIN_INSECURE: "true"
+- name: Deploy
+  steps:
+  - runScriptConfig:
+      image: 192.168.11.150:8081/library/curl:minimal
+      shellScript: |-
+        curl -u rancher:Rancher12345 --location --request POST 'http://192.168.11.150:8081/api/repositories/library/demo/tags' \
+        --header 'Content-Type: text/plain' \
+        --data-raw '{
+          "override": true,
+          "src_image": "library/demo:'${CICD_EXECUTION_SEQUENCE}'",
+          "tag": "latest"
+        }'
+  - applyYamlConfig:
+      path: ./deployment.yaml
+timeout: 60
+notification: {}
