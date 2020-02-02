@@ -1,12 +1,12 @@
-#deployment demo
+#deployment demo-sit
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: demo-dev
+    app: demo-sit
     version: stable
-  name: demo-dev
+  name: demo-sit
   namespace: default
 spec:
   progressDeadlineSeconds: 600
@@ -14,7 +14,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: demo-dev
+      app: demo-sit
       version: stable
   strategy:
     rollingUpdate:
@@ -24,16 +24,16 @@ spec:
   template:
     metadata:
       labels:
-        app: demo-dev
+        app: demo-sit
         version: stable
     spec:
       containers:
         - env:
             - name: environment
-              value: dev
-          image: 192.168.11.150:8081/library/demo:${CICD_EXECUTION_SEQUENCE}
-          imagePullPolicy: IfNotPresent
-          name: demo-dev
+              value: sit
+          image: 192.168.11.150:8081/library/demo:46
+          imagePullPolicy: Always
+          name: demo-sit
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -71,11 +71,11 @@ spec:
 #apiVersion: v1
 #kind: Service
 #metadata:
-#  name: demo-dev
+#  name: demo-sit
 #  namespace: default
 #spec:
 #  selector:
-#    app: demo-dev
+#    app: demo-sit
 #  ports:
 #    - name: web
 #      port: 12346
