@@ -1,0 +1,85 @@
+#deployment demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: demo-dev
+    version: stable
+  name: demo-dev
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: demo-dev
+      version: stable
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: demo-dev
+        version: stable
+    spec:
+      containers:
+        - env:
+            - name: environment
+              value: dev
+          image: 192.168.11.150:8081/library/demo:${CICD_EXECUTION_SEQUENCE}
+          imagePullPolicy: IfNotPresent
+          name: demo-dev
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              httpHeaders:
+                - name: SERVICE-CODE
+                  value: CHECK
+              path: /get/hello
+              port: 12346
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 3
+            successThreshold: 1
+            timeoutSeconds: 3
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              httpHeaders:
+                - name: SERVICE-CODE
+                  value: CHECK
+              path: /get/hello
+              port: 12346
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 3
+            successThreshold: 3
+            timeoutSeconds: 3
+          ports:
+            - containerPort: 12346
+              name: web
+              protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+##service
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: demo-dev
+#  namespace: default
+#spec:
+#  selector:
+#    app: demo-dev
+#  ports:
+#    - name: web
+#      port: 12346
+#      protocol: TCP
+#      targetPort: 12346
+#  type: NodePort
+
