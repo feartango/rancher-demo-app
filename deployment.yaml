@@ -1,12 +1,12 @@
-#deployment demo
+#deployment demo-sit
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: demo-dev
-    version: stable
-  name: demo-dev
+    app: demo-sit
+    version: canary
+  name: demo-sit-canary
   namespace: default
 spec:
   progressDeadlineSeconds: 600
@@ -14,8 +14,8 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: demo-dev
-      version: stable
+      app: demo-sit
+      version: canary
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -24,16 +24,18 @@ spec:
   template:
     metadata:
       labels:
-        app: demo-dev
-        version: stable
+        app: demo-sit
+        version: canary
     spec:
       containers:
         - env:
+            - name: canary
+              value: "1"
             - name: environment
-              value: dev
-          image: 192.168.11.150:8081/library/demo:${CICD_EXECUTION_SEQUENCE}
-          imagePullPolicy: IfNotPresent
-          name: demo-dev
+              value: sit
+          image: 192.168.11.150:8081/library/demo:latest
+          imagePullPolicy: Always
+          name: demo-sit
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -71,15 +73,18 @@ spec:
 #apiVersion: v1
 #kind: Service
 #metadata:
-#  name: demo-dev
+#  name: demo-sit
 #  namespace: default
 #spec:
 #  selector:
-#    app: demo-dev
+#    app: demo-sit
 #  ports:
 #    - name: web
 #      port: 12346
 #      protocol: TCP
 #      targetPort: 12346
 #  type: NodePort
+
+
+
 
