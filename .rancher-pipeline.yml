@@ -16,7 +16,17 @@ stages:
       DOCKER_HOST: tcp://dind.default:2375
       PLUGIN_BUILD_ARGS: VER=${CICD_EXECUTION_SEQUENCE}
       PLUGIN_DAEMON_OFF: "true"
-#      PLUGIN_INSECURE: "true"
+- name: Retag
+  steps:
+  - runScriptConfig:
+      image: feartango/rancher-docker-retag
+      shellScript: docker-retag feartango/rancher-demo-app:${CICD_EXECUTION_SEQUENCE}
+        latest
+    envFrom:
+    - sourceName: docker-retag
+      sourceKey: DOCKER_USER
+    - sourceName: docker-retag
+      sourceKey: DOCKER_PASS
 - name: Deploy
   steps:
   - applyYamlConfig:
