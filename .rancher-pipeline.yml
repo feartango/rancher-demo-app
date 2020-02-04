@@ -16,7 +16,7 @@ stages:
       DOCKER_HOST: tcp://dind.default:2375
       PLUGIN_BUILD_ARGS: VER=${CICD_EXECUTION_SEQUENCE}
       PLUGIN_DAEMON_OFF: "true"
-      PLUGIN_INSECURE: "true"
+#      PLUGIN_INSECURE: "true"
 - name: Deploy
   steps:
   - applyYamlConfig:
