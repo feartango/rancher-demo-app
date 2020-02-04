@@ -33,7 +33,7 @@ spec:
               value: "1"
             - name: environment
               value: sit
-          image: 192.168.11.150:8081/library/demo:latest
+          image: feartango/rancher-demo-app:latest
           imagePullPolicy: Always
           name: demo-sit
           livenessProbe:
