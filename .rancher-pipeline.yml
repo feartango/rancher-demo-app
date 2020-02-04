@@ -3,7 +3,7 @@ stages:
   steps:
   - runScriptConfig:
       image: feartango/rancher-demo-maven
-      shellScript: mvn clean install
+      shellScript: mvn clean package -Dmaven.test.skip=true
 - name: Publish
   steps:
   - publishImageConfig:
