@@ -18,16 +18,16 @@ public class ApiController {
     @ResponseBody
     @RequestMapping(value = "/get/hello", method = RequestMethod.GET)
     public String hello() {
-        return "(" + systemInfo.toString() + ") request-header-service-code:" + request.getHeader("SERVICE-CODE")+
-                ";request-header-user:"+ request.getHeader("USER");
+        return "(" + systemInfo.toString() + ") <br/> request-header-service-code:" + request.getHeader("SERVICE-CODE")+
+                " <br/> request-header-user:"+ request.getHeader("USER");
     }
 
     @ResponseBody
     @RequestMapping(value = "/post/hello", method = RequestMethod.POST)
     public String postHello(@RequestBody Map map) {
-        return "(" + systemInfo.toString() + ") request-body-service-code:" + map.get("serviceCode") +
-                ";request-header-service-code:" + request.getHeader("SERVICE-CODE") +
-                ";request-header-user:"+ request.getHeader("USER");
+        return "(" + systemInfo.toString() + ") <br/> request-body-service-code:" + map.get("serviceCode") +
+                "<br/> request-header-service-code:" + request.getHeader("SERVICE-CODE") +
+                "<br/> request-header-user:"+ request.getHeader("USER");
     }
 
 }
