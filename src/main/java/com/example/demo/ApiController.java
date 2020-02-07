@@ -19,7 +19,7 @@ public class ApiController {
     @RequestMapping(value = "/get/hello", method = RequestMethod.GET)
     public String hello() {
         return "(" + systemInfo.toString() + ") request-header-service-code:" + request.getHeader("SERVICE-CODE")+
-                "request-header-user"+ request.getHeader("USER");
+                ";request-header-user:"+ request.getHeader("USER");
     }
 
     @ResponseBody
@@ -27,7 +27,7 @@ public class ApiController {
     public String postHello(@RequestBody Map map) {
         return "(" + systemInfo.toString() + ") request-body-service-code:" + map.get("serviceCode") +
                 ";request-header-service-code:" + request.getHeader("SERVICE-CODE") +
-                "request-header-user"+ request.getHeader("USER");
+                ";request-header-user:"+ request.getHeader("USER");
     }
 
 }
